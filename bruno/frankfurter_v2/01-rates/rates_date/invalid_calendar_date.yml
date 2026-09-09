@@ -1,0 +1,42 @@
+info:
+  name: invalid_calendar_date
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{base}}/rates?date=2026-02-30"
+  params:
+    - name: date
+      value: 2026-02-30
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  
+
+  ### Objective
+  Verify API behavior when `date` follows the expected format but represents an impossible calendar date.
+
+  ### Input
+  `date=2026-02-30`
+
+  ### Expected
+  The request should be rejected because February 30 is not a valid calendar date.
+
+  ### Actual
+  HTTP `422`
+
+  ```json
+  {
+    "status": 422,
+    "message": "invalid date"
+  }
+  ```

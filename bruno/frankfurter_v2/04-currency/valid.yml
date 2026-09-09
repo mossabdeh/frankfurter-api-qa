@@ -1,0 +1,55 @@
+info:
+  name: valid
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base}}/currency/DZD"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that details can be retrieved for a valid currency code.
+
+  ### Input
+  Currency code: `DZD`
+
+  ### Expected
+  The request should succeed and return detailed information for the requested currency.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  {
+    "iso_code": "DZD",
+    "iso_numeric": "012",
+    "name": "Algerian Dinar",
+    "symbol": "د.ج",
+    "start_date": "1998-07-07",
+    "end_date": "2026-09-09",
+    "providers": [
+      "BAM",
+      "BCBO",
+      "BCT",
+      "BDI",
+      "BOA",
+      "BOTA",
+      "CBR",
+      "CBU",
+      "ECB",
+      "IMF",
+      "LB",
+      "NBP",
+      "NBU"
+    ]
+  }
+  ```

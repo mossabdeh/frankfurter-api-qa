@@ -1,0 +1,40 @@
+info:
+  name: empty_scope
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{base}}/currencies?scope="
+  params:
+    - name: scope
+      value: ""
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when the `scope` parameter is empty.
+
+  ### Input
+  `scope=`
+
+  ### Expected
+  Determine whether the API rejects an empty scope value or falls back to default behavior.
+
+  ### Actual
+  HTTP `200`
+
+  The response returns the normal currency collection.
+
+  ### Observation
+  An empty `scope` value is accepted and behaves like the default `/currencies` request.
+
+  Legacy-scope expansion is not applied.

@@ -1,0 +1,29 @@
+info:
+  name: 01-rates
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Rates API
+
+    Requests covering exchange-rate retrieval and filtering through the `/rates` endpoint.
+
+    Coverage includes:
+
+    - latest rates
+    - base currency
+    - quote filtering
+    - historical dates
+    - date ranges
+    - weekly and monthly grouping
+    - provider filtering
+    - provider attribution
+    - CSV output
+    - NDJSON output
+    - invalid and boundary inputs
+    - case handling
+  type: text/markdown

@@ -1,0 +1,31 @@
+info:
+  name: 04-currency
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Currency
+
+    Test coverage for the `/currency/{code}` endpoint.
+
+    The endpoint returns metadata and provider coverage for a single currency.
+
+    | Scenario | Input | Result |
+    | --- | --- | --- |
+    | Valid currency | `DZD` | `200`  currency details returned |
+    | Invalid currency | `XYZ` | `404`  `not found` |
+    | Case variation | `dZd` | `200`  currency details returned |
+
+    ### Observations
+
+    - A valid currency code returns HTTP `200` with detailed currency metadata.
+    - The response includes fields such as `iso_code`, `iso_numeric`, `name`, `symbol`, `start_date`, and `end_date`.
+    - The response also includes a `providers` array identifying provider coverage for the requested currency.
+    - An unsupported currency code returns HTTP `404` with the message `not found`.
+    - This differs from invalid currency values used in `/rates` and `/rate`, where HTTP `422` is returned.
+    - Currency codes are case-insensitive in the tested requests.
+  type: text/markdown

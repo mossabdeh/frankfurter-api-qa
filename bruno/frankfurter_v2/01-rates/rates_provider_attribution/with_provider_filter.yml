@@ -1,0 +1,61 @@
+info:
+  name: with_provider_filter
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base}}/rates?providers=ECB&expand=providers&quotes=USD"
+  params:
+    - name: providers
+      value: ECB
+      type: query
+    - name: expand
+      value: providers
+      type: query
+    - name: quotes
+      value: USD
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify provider attribution when exchange rates are filtered to a specific provider.
+
+  ### Input
+  `providers=ECB`
+
+  `expand=providers`
+
+  `quotes=USD`
+
+  ### Expected
+  The request should succeed, return the USD exchange rate filtered to ECB, and include attribution information for the ECB provider.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  [
+    {
+      "date": "2026-09-08",
+      "base": "EUR",
+      "quote": "USD",
+      "rate": 1.1614,
+      "providers": [
+        {
+          "key": "ECB",
+          "date": "2026-09-08",
+          "rate": 1.1614
+        }
+      ]
+    }
+  ]
+  ```

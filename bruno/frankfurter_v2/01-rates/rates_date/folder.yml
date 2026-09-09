@@ -1,0 +1,31 @@
+info:
+  name: rates_date
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Historical Rates
+
+    Test coverage for the `date` query parameter of the `/rates` endpoint.
+
+    | Scenario | Input | Result |
+    |---|---|---|
+    | Valid historical date | `1999-01-04` | `200` — rates returned |
+    | Invalid date format | `04-01-1994` | `200` — empty array |
+    | Malformed value | `hello` | `422` — `invalid date` |
+    | Invalid calendar date | `2026-02-30` | `422` — `invalid date` |
+    | Future date | `2030-01-01` | `200` — empty array |
+    | Before base currency history | `1990-01-01` | `200` — empty array |
+
+    ### Observations
+
+    - Valid historical dates with available data return `200` with exchange rates.
+    - Malformed or impossible calendar dates are rejected with `422`.
+    - Valid dates with no matching data return `200` with an empty array.
+    - A date written in a non-documented format such as `04-01-1994` returns `200` with an empty array rather than a validation error.
+    - Historical availability depends on the currency/data source; `1990-01-01` with the default EUR base returns no data.
+  type: text/markdown

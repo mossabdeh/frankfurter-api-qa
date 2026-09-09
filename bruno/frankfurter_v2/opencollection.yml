@@ -1,0 +1,195 @@
+opencollection: 1.0.0
+
+info:
+  name: frankfurter_v2
+  version: 1.0.0
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+docs:
+  content: |+
+    # Frankfurter API v2  QA Collection
+
+    Manual and exploratory API testing collection for the Frankfurter foreign-exchange API v2.
+
+    ## Purpose
+
+    This collection was created to explore and validate the public API before building an automated regression suite.
+
+    The goal of this phase is to understand:
+
+    - expected endpoint behavior;
+    - parameter validation rules;
+    - boundary and negative-case behavior;
+    - response structures and formats;
+    - historical-data behavior;
+    - provider filtering;
+    - consistency between related endpoints.
+
+    The observations collected here will be used to select high-value scenarios for later automation with Python and Pytest.
+
+    ## System Under Test
+
+    Base URL:
+
+    `https://api.frankfurter.dev/v2`
+
+    The API provides exchange-rate data, historical rates, currency metadata, and information about the underlying data providers.
+
+    ## Scope
+
+    | Endpoint | Main Coverage |
+    | --- | --- |
+    | `/rates` | Latest rates, base and quote filtering, historical dates, time series, grouping, provider filtering, provider attribution, CSV and NDJSON |
+    | `/rate/{base}/{quote}` | Single currency-pair rates, invalid currencies, same-currency rates, historical lookup, provider filtering |
+    | `/currencies` | Currency collection, `scope=all`, unsupported and empty scope values |
+    | `/currency/{code}` | Individual currency metadata, invalid currency lookup, case handling |
+    | `/providers` | Available data providers and provider metadata |
+
+    Detailed scenarios, inputs, expected behavior, actual results, and observations are documented inside the corresponding request and folder documentation.
+
+    ## Testing Approach
+
+    Testing was performed manually using Bruno.
+
+    The collection includes:
+
+    - functional testing;
+    - exploratory testing;
+    - negative testing;
+    - boundary and edge-case testing;
+    - input-validation testing;
+    - response-format validation;
+    - case-sensitivity checks;
+    - basic cross-endpoint consistency checks.
+
+    Documented behavior is used as the expected result when the API specification defines it.
+
+    For behavior that is not explicitly specified, the request is treated as exploratory: the actual API response is recorded without assuming that a particular status code or behavior is necessarily correct.
+
+    ## Selected Exploratory Findings
+
+    Several behaviors discovered during exploration are useful candidates for future regression tests.
+
+    ### Validation behavior is not uniform
+
+    Invalid currency values used for rate calculation are rejected:
+
+    - `/rates?base=XYZ` → `422`
+    - `/rate/XYZ/USD` → `422`
+
+    However, requesting an unknown currency resource behaves differently:
+
+    - `/currency/XYZ` → `404` with `not found`
+
+    ### Some unsupported or empty parameters are permissive
+
+    Examples observed during testing:
+
+    - `providers=XYZ` → `200` with an empty result
+    - `providers=` → `200` with an empty result
+    - `quotes=` → `200` with an empty result
+    - `scope=invalid` → `200` with default currency-list behavior
+    - `scope=` → `200` with default currency-list behavior
+    - `expand=` → `200` without provider expansion
+
+    Other unsupported values are validated strictly:
+
+    - invalid currency → `422`
+    - invalid group → `422`
+    - invalid non-empty expand → `422`
+    - malformed dates → `422`
+
+    This difference in parameter-validation behavior is one of the main findings from the exploratory phase.
+
+    ### Date and range behavior
+
+    Observed behaviors include:
+
+    - valid historical dates return available historical data;
+    - malformed and impossible calendar dates return `422`;
+    - valid dates with no available data can return `200` with an empty result;
+    - a non-documented date format can return an empty result instead of a validation error;
+    - a reversed `from` / `to` range returns `200` with an empty result;
+    - identical `from` and `to` values are accepted as a single-day range.
+
+    ### Identifier case handling
+
+    Currency and provider identifiers were case-insensitive in the tested scenarios.
+
+    Examples include:
+
+    - `USD`, `usd`, `UsD`
+    - `ECB`, `ecb`, `Ecb`
+    - `/currency/DZD` and `/currency/dZd`
+
+    ### Rate behavior
+
+    A request where the base and quote currencies are identical is supported:
+
+    `/rate/EUR/EUR` → `200` with `rate: 1.0`
+
+    Provider-filtered EUR/USD results were also consistent between the tested `/rates` and `/rate` requests.
+
+    ### Grouping
+
+    Both documented grouping modes were successfully exercised:
+
+    - `group=week`
+    - `group=month`
+
+    An unsupported value such as `group=day` returns `422`.
+
+    Using `group` without a time-series start date was accepted and returned a single rate rather than a grouped series.
+
+    The exact aggregation method used to construct grouped rates was not established during this phase.
+
+    ### Alternative response formats
+
+    The `/rates` endpoint successfully returned:
+
+    - CSV using the `.csv` path extension;
+    - CSV using `Accept: text/csv`;
+    - NDJSON using `Accept: application/x-ndjson`.
+
+    Query filters continued to apply when these formats were requested.
+
+    ## Test Data Considerations
+
+    Exchange-rate values and provider availability can change over time.
+
+    For future automation, tests should avoid depending unnecessarily on hard-coded latest exchange-rate values.
+
+    Regression tests should prefer stable assertions such as:
+
+    - HTTP status;
+    - response structure;
+    - requested base and quote currencies;
+    - data types;
+    - date/range constraints;
+    - identity-rate rules;
+    - provider attribution;
+    - relationships between API responses.
+
+    ## Infrastructure Note
+
+    A transient Cloudflare `521` response was encountered once during exploration.
+
+    The same request succeeded after retrying, so the event was treated as an infrastructure availability issue rather than a functional API result.
+
+  type: text/markdown
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git

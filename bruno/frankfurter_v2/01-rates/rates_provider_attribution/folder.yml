@@ -1,0 +1,32 @@
+info:
+  name: rates_provider_attribution
+  type: folder
+  seq: 8
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Provider Attribution
+
+    Test coverage for the `expand=providers` functionality of the `/rates` endpoint.
+
+    The `expand=providers` parameter enriches rate responses with information about the data providers contributing to the returned rate.
+
+    | Scenario | Input | Result |
+    |---|---|---|
+    | Valid provider expansion | `expand=providers` | `200`  provider attribution returned |
+    | Expansion with provider filter | `providers=ECB&expand=providers&quotes=USD` | `200`  ECB attribution returned |
+    | Unsupported expansion | `expand=hello` | `422`  `invalid expand: hello` |
+    | Empty expansion | `expand=&quotes=USD` | `200`  normal response without attribution |
+
+    ### Observations
+
+    - `expand=providers` successfully adds provider attribution to the rate response.
+    - Provider attribution can be combined with the `providers` filter.
+    - When filtered to `ECB`, the attribution information is restricted to the ECB provider in the tested request.
+    - Unsupported non-empty `expand` values are rejected with HTTP `422`.
+    - An empty `expand` value is accepted and behaves like a normal request without provider expansion.
+    - This differs from invalid `providers` values, which return HTTP `200` with an empty result rather than a validation error.
+  type: text/markdown

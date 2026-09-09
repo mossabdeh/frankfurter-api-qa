@@ -1,0 +1,37 @@
+info:
+  name: future_date
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{base}}/rates?date=2030-01-01"
+  params:
+    - name: date
+      value: 2030-01-01
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when `date` contains a valid calendar date in the future.
+
+  ### Input
+  `date=2030-01-01`
+
+  ### Expected
+  Determine how the API handles a valid date for which historical exchange-rate data cannot yet exist.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  []
+  ```

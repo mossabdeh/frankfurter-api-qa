@@ -1,0 +1,23 @@
+info:
+  name: rates_quotes
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Quotes Filter
+
+    Test coverage for the `quotes` query parameter of the `/rates` endpoint.
+
+    | Scenario | Input | Result |
+    |---|---|---|
+    | Valid single quote | `USD` | `200` |
+    | Valid multiple quotes | `USD,GBP` | `200` |
+    | Unsupported currency | `XYZ` | `422` |
+    | Mixed valid/invalid currencies | `USD,XYZ` | `422` |
+    | Empty value | `""` | `200`   empty array |
+    | Case variation | `Usd,eUr` | `200` |
+  type: text/markdown

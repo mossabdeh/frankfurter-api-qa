@@ -1,0 +1,55 @@
+info:
+  name: valid_month
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base}}/rates?from=2026-01-01&group=month&quotes=USD"
+  params:
+    - name: from
+      value: 2026-01-01
+      type: query
+    - name: group
+      value: month
+      type: query
+    - name: quotes
+      value: USD
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that a time series can be downsampled using monthly grouping.
+
+  ### Input
+  `from=2026-01-01`
+
+  `group=month`
+
+  `quotes=USD`
+
+  ### Expected
+  The request should succeed and return USD exchange-rate data downsampled by month.
+
+  ### Actual
+  HTTP `200`
+
+  The response returns one USD rate per monthly interval.
+
+  Example interval dates:
+  - `2026-01-01`
+  - `2026-02-01`
+  - `2026-03-01`
+
+  The `quotes=USD` filter is respected.
+
+  ### Observation
+  The returned dates represent monthly intervals in the downsampled time series. The exact aggregation method is not specified in the provided documentation.

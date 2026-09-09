@@ -1,0 +1,35 @@
+info:
+  name: valid
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base}}/rates?date=1999-01-04"
+  params:
+    - name: date
+      value: 1999-01-04
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that historical exchange rates can be retrieved for a valid date.
+
+  ### Input
+  `date=1999-01-04`
+
+  ### Expected
+  The request should succeed and return exchange rates for the requested date.
+
+  ### Actual
+  HTTP `200`
+
+  The response successfully returns exchange rates for `1999-01-04`.

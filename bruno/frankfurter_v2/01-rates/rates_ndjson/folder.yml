@@ -1,0 +1,27 @@
+info:
+  name: rates_ndjson
+  type: folder
+  seq: 10
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## NDJSON Output
+
+    Test coverage for NDJSON responses from the `/rates` endpoint.
+
+    NDJSON output is requested using the `Accept: application/x-ndjson` header.
+
+    | Scenario | Input | Result |
+    | --- | --- | --- |
+    | NDJSON Accept header | `/rates?from=2026-01-01&quotes=USD` + `Accept: application/x-ndjson` | `200`  NDJSON response returned |
+
+    ### Observations
+
+    - Sending `Accept: application/x-ndjson` successfully returns exchange-rate data in NDJSON format.
+    - Each response line represents one independent JSON object.
+    - Time-series data can therefore be consumed record by record.
+    - Query parameters such as `from` and `quotes=USD` continue to be respected when NDJSON output is requested.
+  type: text/markdown

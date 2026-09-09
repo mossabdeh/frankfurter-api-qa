@@ -1,0 +1,38 @@
+info:
+  name: scope_all
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base}}/currencies?scope=all"
+  params:
+    - name: scope
+      value: all
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that legacy currencies can be included using the `scope=all` parameter.
+
+  ### Input
+  `scope=all`
+
+  ### Expected
+  The request should succeed and return the currency list including legacy currencies.
+
+  ### Actual
+  HTTP `200`
+
+  The API successfully returns the currency collection when `scope=all` is provided.
+
+  ### Observation
+  The `scope=all` parameter is accepted and extends the currencies request to include legacy currency coverage as documented.

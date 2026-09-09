@@ -1,0 +1,40 @@
+info:
+  name: malformed_value
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{base}}/rates?date=hello"
+  params:
+    - name: date
+      value: hello
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when `date` contains a malformed value.
+
+  ### Input
+  `date=hello`
+
+  ### Expected
+  The request should be rejected because the value cannot be interpreted as a valid date.
+
+  ### Actual
+  HTTP `422`
+
+  ```json
+  {
+    "status": 422,
+    "message": "invalid date"
+  }
+  ```

@@ -1,0 +1,35 @@
+info:
+  name: valid_multiple
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base}}/rates?quotes=USD,GBP"
+  params:
+    - name: quotes
+      value: USD,GBP
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that rates can be filtered by multiple valid target currencies.
+
+  ### Input
+  `quotes=USD,GBP`
+
+  ### Expected
+  The request should succeed and return rates only for USD and GBP.
+
+  ### Actual
+  HTTP `200`
+
+  The response contains only the requested `USD` and `GBP` quotes.

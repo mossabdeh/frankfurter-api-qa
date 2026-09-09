@@ -1,0 +1,32 @@
+info:
+  name: rates_time_series
+  type: folder
+  seq: 5
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Time Series
+
+    Test coverage for the `from` and `to` query parameters of the `/rates` endpoint.
+
+    | Scenario | Input | Result |
+    | --- | --- | --- |
+    | Valid start date | `from=2026-01-02&quotes=USD` | `200`  time series returned |
+    | Valid date range | `from=2026-01-02&to=2026-01-05&quotes=USD` | `200`  rates returned within range |
+    | Same start and end date | `from=2026-01-02&to=2026-01-02&quotes=USD` | `200`  single-day result |
+    | Start date after end date | `from=2026-01-05&to=2026-01-02&quotes=USD` | `200`  empty array |
+    | Invalid `from` value | `from=hello&to=2026-01-05&quotes=USD` | `422`  `invalid date` |
+    | Invalid `to` value | `from=2026-01-02&to=hello&quotes=USD` | `422`  `invalid date` |
+
+    ### Observations
+
+    - A valid `from` value returns a time series starting from the requested date.
+    - A valid `from` / `to` range returns rates within the requested range.
+    - `from` and `to` are inclusive; identical values produce a valid single-day result.
+    - A reversed range where `from > to` is not rejected and returns `200` with an empty array.
+    - Malformed values in either `from` or `to` are consistently rejected with HTTP `422` and `invalid date`.
+    - The `quotes=USD` filter is respected in the tested successful time-series requests.
+  type: text/markdown

@@ -1,0 +1,46 @@
+info:
+  name: provider_filter
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{base}}/rate/EUR/USD?providers=ECB"
+  params:
+    - name: providers
+      value: ECB
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that a single currency-pair rate can be filtered using a specific provider.
+
+  ### Input
+  Base currency: `EUR`
+
+  Quote currency: `USD`
+
+  `providers=ECB`
+
+  ### Expected
+  The request should succeed and return the EUR/USD exchange rate using the specified ECB provider.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  {
+    "date": "2026-09-08",
+    "base": "EUR",
+    "quote": "USD",
+    "rate": 1.1614
+  }
+  ```

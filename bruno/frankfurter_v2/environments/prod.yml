@@ -1,0 +1,5 @@
+name: prod
+variables:
+  - name: base
+    value: https://api.frankfurter.dev/v2
+    description: ""

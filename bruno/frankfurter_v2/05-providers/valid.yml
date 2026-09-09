@@ -1,0 +1,78 @@
+info:
+  name: valid
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base}}/providers"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that the available exchange-rate data providers can be retrieved.
+
+  ### Input
+  `/providers`
+
+  ### Expected
+  The request should succeed and return a list of available data providers with provider metadata and currency coverage.
+
+  ### Actual
+  HTTP `200`
+
+  The response returns an array of provider objects.
+
+  Example provider:
+
+  ```json
+  {
+    "key": "AMCM",
+    "name": "Autoridade Monetária de Macau",
+    "country_code": "MO",
+    "rate_type": "interbank middle rate",
+    "pivot_currency": "MOP",
+    "data_url": "https://www.amcm.gov.mo/en/financial-information/interbank-midpoint",
+    "terms_url": null,
+    "start_date": "1986-01-02",
+    "end_date": "2026-09-09",
+    "publish_cadence": "daily",
+    "publishes_missed": 0,
+    "currencies": [
+      "ATS",
+      "AUD",
+      "BEF",
+      "CAD",
+      "CHF",
+      "CNY",
+      "DEM",
+      "DKK",
+      "ESP",
+      "EUR",
+      "FRF",
+      "GBP",
+      "HKD",
+      "ITL",
+      "JPY",
+      "KRW",
+      "MOP",
+      "MYR",
+      "NLG",
+      "NOK",
+      "NZD",
+      "PTE",
+      "SEK",
+      "SGD",
+      "TWD",
+      "USD",
+      "XEU"
+    ]
+  }
+  ```

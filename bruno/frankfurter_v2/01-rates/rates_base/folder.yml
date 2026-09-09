@@ -1,0 +1,22 @@
+info:
+  name: rates_base
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Base Currency
+
+    Test coverage for the `base` query parameter of the `/rates` endpoint.
+
+    | Scenario | Input | Result |
+    |---|---|---|
+    | Valid supported value | `USD` | `200` |
+    | Unsupported currency | `XYZ` | `422` |
+    | Empty value | `""` | `422` |
+    | Case variation | `usd`, `UsD` | `200` |
+    | Invalid format | `123` | `422` |
+  type: text/markdown

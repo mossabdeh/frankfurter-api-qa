@@ -1,0 +1,35 @@
+info:
+  name: empty
+  type: http
+  seq: 13
+
+http:
+  method: GET
+  url: "{{base}}/rates?base="
+  params:
+    - name: base
+      value: ""
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when `base` is provided without a value.
+
+  ### Input
+  `base=`
+
+  ### Expected
+  The request should be rejected with a validation error.
+
+  ### Actual
+  HTTP `422`
+
+  `invalid currency: `

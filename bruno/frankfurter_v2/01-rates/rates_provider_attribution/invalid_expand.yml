@@ -1,0 +1,45 @@
+info:
+  name: invalid_expand
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{base}}/rates?expand=hello&quotes=USD"
+  params:
+    - name: expand
+      value: hello
+      type: query
+    - name: quotes
+      value: USD
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when `expand` contains an unsupported value.
+
+  ### Input
+  `expand=hello`
+
+  `quotes=USD`
+
+  ### Expected
+  The request should be rejected because `hello` is not a supported expansion value.
+
+  ### Actual
+  HTTP `422`
+
+  ```json
+  {
+    "status": 422,
+    "message": "invalid expand: hello"
+  }
+  ```

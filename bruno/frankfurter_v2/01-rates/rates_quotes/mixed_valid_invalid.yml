@@ -1,0 +1,37 @@
+info:
+  name: mixed_valid_invalid
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{base}}/rates?quotes=USD,XYZ"
+  params:
+    - name: quotes
+      value: USD,XYZ
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |
+  ### Objective
+  Verify API behavior when `quotes` contains both a supported and an unsupported currency.
+
+  ### Input
+  `quotes=USD,XYZ`
+
+  ### Expected
+  Determine whether the API rejects the complete request or partially processes valid currencies.
+
+  ### Actual
+  HTTP `422`
+
+  `invalid currency: XYZ`
+
+  The complete request is rejected when one of the requested currencies is invalid. No partial result is returned for the valid currency.

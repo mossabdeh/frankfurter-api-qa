@@ -1,0 +1,29 @@
+info:
+  name: rates_providers
+  type: folder
+  seq: 7
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Provider Filtering
+
+    Test coverage for the `providers` query parameter of the `/rates` endpoint.
+
+    | Scenario | Input | Result |
+    |---|---|---|
+    | Valid provider | `ECB` | `200` — rate returned |
+    | Invalid provider | `XYZ` | `200` — empty array |
+    | Empty provider | `""` | `200` — empty array |
+    | Case variation | `ecb`, `Ecb` | `200` — rate returned |
+
+    ### Observations
+
+    - A valid provider key such as `ECB` successfully filters exchange-rate data.
+    - Unsupported provider keys are not rejected and return `200` with an empty array.
+    - An empty `providers` value also returns `200` with an empty array.
+    - Provider keys are case-insensitive in the tested requests.
+    - Invalid and empty provider values behave differently from invalid currency values, which are rejected with HTTP `422`.
+  type: text/markdown

@@ -1,0 +1,35 @@
+info:
+  name: 03-currencies
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Currencies
+
+    Test coverage for the `/currencies` endpoint.
+
+    The endpoint returns available currencies with currency metadata.
+
+    The optional `scope=all` parameter includes legacy currencies.
+
+    | Scenario | Input | Result |
+    | --- | --- | --- |
+    | Default currencies | `/currencies` | `200`  currency list returned |
+    | Include legacy currencies | `scope=all` | `200`  legacy scope included |
+    | Unsupported scope | `scope=invalid` | `200`  default currency list returned |
+    | Empty scope | `scope=` | `200`  default currency list returned |
+
+    ### Observations
+
+    - The default `/currencies` request returns an array of currency objects.
+    - Currency objects include metadata such as `iso_code`, `iso_numeric`, `name`, `symbol`, `start_date`, and `end_date`.
+    - `scope=all` is accepted and includes legacy currency coverage.
+    - Unsupported `scope` values are not rejected.
+    - An unsupported `scope` value falls back to the default currency-list behavior.
+    - An empty `scope` value behaves the same way as an unsupported value and also falls back to the default behavior.
+    - The `scope` parameter is therefore permissive rather than strictly validated in the tested cases.
+  type: text/markdown

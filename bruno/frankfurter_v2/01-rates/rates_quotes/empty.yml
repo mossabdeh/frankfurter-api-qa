@@ -1,0 +1,37 @@
+info:
+  name: empty
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{base}}/rates?quotes="
+  params:
+    - name: quotes
+      value: ""
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when `quotes` is provided without a value.
+
+  ### Input
+  `quotes=`
+
+  ### Expected
+  Determine whether an empty `quotes` value is rejected, ignored, or treated as an empty filter.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  []
+  ```

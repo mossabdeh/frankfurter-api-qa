@@ -1,0 +1,42 @@
+info:
+  name: same_base_quote
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{base}}/rate/EUR/EUR"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when the base and quote currencies are identical.
+
+  ### Input
+  Base currency: `EUR`
+
+  Quote currency: `EUR`
+
+  ### Expected
+  Determine whether the API supports identical base and quote currencies.
+
+  If supported, the exchange rate should be `1.0`.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  {
+    "date": "2026-09-10",
+    "base": "EUR",
+    "quote": "EUR",
+    "rate": 1.0
+  }
+  ```

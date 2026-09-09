@@ -1,0 +1,32 @@
+info:
+  name: rates_csv
+  type: folder
+  seq: 9
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## CSV Output
+
+    Test coverage for CSV responses from the `/rates` endpoint.
+
+    CSV output can be requested in two documented ways:
+
+    - Append `.csv` to the endpoint path.
+    - Send the `Accept: text/csv` header.
+
+    | Scenario | Input | Result |
+    | --- | --- | --- |
+    | CSV path extension | `/rates.csv?quotes=USD` | `200` CSV response returned |
+    | CSV Accept header | `/rates?quotes=USD` + `Accept: text/csv` | `200` CSV response returned |
+
+    ### Observations
+
+    - Appending `.csv` to the `/rates` path successfully returns exchange-rate data in CSV format.
+    - Sending `Accept: text/csv` to the standard `/rates` endpoint also successfully returns CSV data.
+    - Both documented mechanisms produce the same CSV representation in the tested requests.
+    - The CSV response contains the expected columns: `date`, `base`, `quote`, and `rate`.
+    - Query parameters such as `quotes=USD` continue to be respected when CSV output is requested.
+  type: text/markdown

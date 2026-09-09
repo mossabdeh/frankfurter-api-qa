@@ -1,0 +1,51 @@
+info:
+  name: empty
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{base}}/rates?expand=&quotes=USD"
+  params:
+    - name: expand
+      value: ""
+      type: query
+    - name: quotes
+      value: USD
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  
+
+  ### Objective
+  Verify API behavior when the `expand` parameter is empty.
+
+  ### Input
+  `expand=`
+
+  `quotes=USD`
+
+  ### Expected
+  Determine how the API handles an empty expansion value.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  [
+    {
+      "date": "2026-09-10",
+      "base": "EUR",
+      "quote": "USD",
+      "rate": 1.1631
+    }
+  ]
+  ```

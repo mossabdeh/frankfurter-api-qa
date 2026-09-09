@@ -1,0 +1,36 @@
+info:
+  name: rates_grouping
+  type: folder
+  seq: 6
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    ## Grouping
+
+    Test coverage for the `group` query parameter of the `/rates` endpoint.
+
+    Supported values:
+    - `week`
+    - `month`
+
+    | Scenario | Input | Result |
+    |---|---|---|
+    | Valid weekly grouping | `from=2026-01-01&group=week&quotes=USD` | `200` — weekly downsampled series |
+    | Valid monthly grouping | `from=2026-01-01&group=month&quotes=USD` | `200` — monthly downsampled series |
+    | Unsupported grouping value | `from=2026-01-01&group=day&quotes=USD` | `422` — `invalid group` |
+    | Group without start date | `group=month&quotes=USD` | `200` — single rate returned |
+
+    ### Observations
+
+    - `group=week` successfully downsamples the time series into weekly intervals.
+    - `group=month` successfully downsamples the time series into monthly intervals.
+    - Weekly grouped dates progress in 7-day intervals from the requested start date.
+    - Monthly grouped dates progress in monthly intervals from the requested start date.
+    - Unsupported grouping values such as `day` are rejected with HTTP `422` and `invalid group`.
+    - `group` does not require a `from` parameter. When `group=month` was used without a time-series range, the API returned `200` with a single rate rather than a grouped time series.
+    - Grouped interval dates should not be interpreted as proof of a raw daily observation for that exact date.
+    - The exact aggregation method used to calculate grouped rates is not specified in the provided documentation.
+  type: text/markdown

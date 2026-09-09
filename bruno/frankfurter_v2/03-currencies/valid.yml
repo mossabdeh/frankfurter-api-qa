@@ -1,0 +1,44 @@
+info:
+  name: valid
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base}}/currencies"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify that the list of available currencies can be retrieved.
+
+  ### Input
+  `/currencies`
+
+  ### Expected
+  The request should succeed and return a list of available currencies with currency metadata.
+
+  ### Actual
+  HTTP `200`
+
+  The response returns an array of currency objects.
+
+  Example:
+
+  ```json
+  {
+    "iso_code": "AED",
+    "iso_numeric": "784",
+    "name": "United Arab Emirates Dirham",
+    "symbol": "د.إ",
+    "start_date": "1996-04-11",
+    "end_date": "2026-09-10"
+  }
+  ```

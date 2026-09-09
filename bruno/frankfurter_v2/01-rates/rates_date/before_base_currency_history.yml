@@ -1,0 +1,37 @@
+info:
+  name: before_base_currency_history
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{base}}/rates?date=1990-01-01"
+  params:
+    - name: date
+      value: 1990-01-01
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+docs: |-
+  ### Objective
+  Verify API behavior when `date` is earlier than the available historical data for the default currency context.
+
+  ### Input
+  `date=1990-01-01`
+
+  ### Expected
+  Determine how the API handles a valid historical date for which no matching rate data is available.
+
+  ### Actual
+  HTTP `200`
+
+  ```json
+  []
+  ```

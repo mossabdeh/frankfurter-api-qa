@@ -1,0 +1,36 @@
+info:
+  name: 02-rate
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit
+
+docs:
+  content: |+
+    ## Single Rate
+
+    Test coverage for the `/rate/{base}/{quote}` endpoint.
+
+    The endpoint returns the exchange rate for a single currency pair and supports optional `date` and `providers` parameters.
+
+    | Scenario | Input | Result |
+    |---|---|---|
+    | Valid currency pair | `USD/EUR` | `200`  single rate object returned |
+    | Invalid base currency | `XYZ/EUR` | `422`  `invalid currency: XYZ` |
+    | Invalid quote currency | `USD/XYZ` | `422`  `invalid currency: XYZ` |
+    | Same base and quote | `EUR/EUR` | `200`  rate `1.0` |
+    | Historical rate | `EUR/USD?date=2026-01-02` | `200`  historical rate returned |
+    | Provider filter | `EUR/USD?providers=ECB` | `200`  provider-filtered rate returned |
+
+    ### Observations
+
+    - A valid currency pair returns HTTP `200` with a single JSON object rather than an array.
+    - The returned `base` and `quote` values match the requested currency pair.
+    - Unsupported base and quote currencies are consistently rejected with HTTP `422` and `invalid currency`.
+    - Identical base and quote currencies are supported and return an identity rate of `1.0`.
+    - The optional `date` parameter successfully retrieves a rate for a specific historical date.
+    - The optional `providers` parameter successfully restricts the rate to a specific provider.
+    - The tested ECB-filtered EUR/USD rate is consistent with the corresponding result previously obtained through the `/rates` endpoint.
+
+  type: text/markdown
