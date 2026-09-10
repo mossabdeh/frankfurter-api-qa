@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "frankfurter-api-qa"
+version = "0.1.0"
+description = "QA automation framework for the Frankfurter foreign-exchange API."
+requires-python = ">=3.10"
+
+dependencies = [
+    "pytest>=8.0",
+    "requests>=2.31",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+markers = [
+    "smoke: critical fast checks",
+    "regression: core regression tests",
+    "data_integrity: financial and cross-endpoint consistency checks",
+]
