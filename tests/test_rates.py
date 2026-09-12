@@ -185,3 +185,55 @@ def test_reg_002_invalid_currency_validation(client, endpoint):
     assert isinstance(error["message"], str)
     assert "invalid currency" in error["message"].lower()
     assert "XYZ" in error["message"]
+
+
+
+
+
+@pytest.mark.regression
+def test_reg_004_time_series_range(client):
+    """
+    REG-004  Time-series range
+
+    Endpoint:
+        GET /rates?from=2026-01-02&to=2026-01-05&quotes=USD
+
+    Objective:
+        Verify that the rates endpoint returns only rates inside
+        the requested date range and respects the quote filter.
+
+    Expected:
+        - HTTP 200
+        - JSON array
+        - Response is not empty
+        - Every returned date is inside the requested range
+        - Every returned quote is USD
+        - Every rate is numeric and greater than 0
+    """
+    start_date = date.fromisoformat("2026-01-02")
+    end_date = date.fromisoformat("2026-01-05")
+
+    response = client.get_rates(
+        params={
+            "from": start_date.isoformat(),
+            "to": end_date.isoformat(),
+            "quotes": "USD",
+        }
+    )
+
+    assert response.status_code == 200
+
+    rates = response.json()
+
+    assert isinstance(rates, list)
+    assert rates
+
+    for rate_entry in rates:
+        returned_date = date.fromisoformat(rate_entry["date"])
+
+        assert start_date <= returned_date <= end_date
+        assert rate_entry["quote"] == "USD"
+
+        assert isinstance(rate_entry["rate"], (int, float))
+        assert not isinstance(rate_entry["rate"], bool)
+        assert rate_entry["rate"] > 0
