@@ -280,3 +280,61 @@ def test_reg_005_provider_filtering(client):
         assert isinstance(rate_entry["rate"], (int, float))
         assert not isinstance(rate_entry["rate"], bool)
         assert rate_entry["rate"] > 0
+
+
+
+
+
+@pytest.mark.regression
+def test_reg_006_provider_attribution(client):
+    """
+    REG-006  Provider attribution
+
+    Endpoint:
+        GET /rates?providers=ECB&expand=providers&quotes=USD
+
+    Objective:
+        Verify that provider attribution is returned when explicitly
+        requested for a provider-filtered rate.
+
+    Expected:
+        - HTTP 200
+        - JSON array
+        - Response is not empty
+        - Every returned quote is USD
+        - Provider attribution is present
+        - Attribution identifies ECB
+        - Every rate is numeric and greater than 0
+    """
+    response = client.get_rates(
+        params={
+            "providers": "ECB",
+            "expand": "providers",
+            "quotes": "USD",
+        }
+    )
+
+    assert response.status_code == 200
+
+    rates = response.json()
+
+    assert isinstance(rates, list)
+    assert rates
+
+    for rate_entry in rates:
+        assert rate_entry["quote"] == "USD"
+
+        assert "providers" in rate_entry
+        assert isinstance(rate_entry["providers"], list)
+        assert rate_entry["providers"]
+
+        provider_keys = {
+            provider["key"]
+            for provider in rate_entry["providers"]
+        }
+
+        assert "ECB" in provider_keys
+
+        assert isinstance(rate_entry["rate"], (int, float))
+        assert not isinstance(rate_entry["rate"], bool)
+        assert rate_entry["rate"] > 0
