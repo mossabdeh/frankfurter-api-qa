@@ -141,3 +141,47 @@ def test_reg_001_multiple_quote_filtering(client):
         assert isinstance(rate_entry["rate"], (int, float))
         assert not isinstance(rate_entry["rate"], bool)
         assert rate_entry["rate"] > 0
+
+
+
+
+
+@pytest.mark.regression
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        pytest.param("rates", id="rates-invalid-base"),
+        pytest.param("single-rate", id="single-rate-invalid-base"),
+    ],
+)
+def test_reg_002_invalid_currency_validation(client, endpoint):
+    """
+    REG-002  Invalid currency validation
+
+    Endpoints:
+        GET /rates?base=XYZ
+        GET /rate/XYZ/USD
+
+    Objective:
+        Verify that representative endpoints consistently reject
+        an unsupported currency code.
+
+    Expected:
+        - HTTP 422
+        - JSON error object
+        - Error message identifies XYZ as an invalid currency
+    """
+    if endpoint == "rates":
+        response = client.get_rates(params={"base": "XYZ"})
+    else:
+        response = client.get_rate("XYZ", "USD")
+
+    assert response.status_code == 422
+
+    error = response.json()
+
+    assert isinstance(error, dict)
+    assert "message" in error
+    assert isinstance(error["message"], str)
+    assert "invalid currency" in error["message"].lower()
+    assert "XYZ" in error["message"]
