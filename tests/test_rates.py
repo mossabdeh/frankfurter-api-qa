@@ -90,3 +90,54 @@ def test_smk_003_basic_base_quote_filtering(client):
         assert isinstance(rate_entry["rate"], (int, float))
         assert not isinstance(rate_entry["rate"], bool)
         assert rate_entry["rate"] > 0
+
+
+
+
+@pytest.mark.regression
+def test_reg_001_multiple_quote_filtering(client):
+    """
+    REG-001  Multiple quote filtering
+
+    Endpoint:
+        GET /rates?base=EUR&quotes=USD,GBP
+
+    Objective:
+        Verify that the rates endpoint correctly handles
+        multiple requested quote currencies.
+
+    Expected:
+        - HTTP 200
+        - JSON array
+        - Response is not empty
+        - Every returned rate has base EUR
+        - Only USD and GBP quotes are returned
+        - Both USD and GBP are present
+        - Every rate is numeric and greater than 0
+    """
+    expected_quotes = {"USD", "GBP"}
+
+    response = client.get_rates(
+        params={
+            "base": "EUR",
+            "quotes": "USD,GBP",
+        }
+    )
+
+    assert response.status_code == 200
+
+    rates = response.json()
+
+    assert isinstance(rates, list)
+    assert rates
+
+    returned_quotes = {rate_entry["quote"] for rate_entry in rates}
+
+    assert returned_quotes == expected_quotes
+
+    for rate_entry in rates:
+        assert rate_entry["base"] == "EUR"
+
+        assert isinstance(rate_entry["rate"], (int, float))
+        assert not isinstance(rate_entry["rate"], bool)
+        assert rate_entry["rate"] > 0
