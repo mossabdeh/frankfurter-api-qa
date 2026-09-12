@@ -237,3 +237,46 @@ def test_reg_004_time_series_range(client):
         assert isinstance(rate_entry["rate"], (int, float))
         assert not isinstance(rate_entry["rate"], bool)
         assert rate_entry["rate"] > 0
+
+
+
+
+@pytest.mark.regression
+def test_reg_005_provider_filtering(client):
+    """
+    REG-005  Provider filtering
+
+    Endpoint:
+        GET /rates?providers=ECB&quotes=USD
+
+    Objective:
+        Verify that the rates endpoint successfully accepts
+        a valid provider filter.
+
+    Expected:
+        - HTTP 200
+        - JSON array
+        - Response is not empty
+        - Every returned quote is USD
+        - Every rate is numeric and greater than 0
+    """
+    response = client.get_rates(
+        params={
+            "providers": "ECB",
+            "quotes": "USD",
+        }
+    )
+
+    assert response.status_code == 200
+
+    rates = response.json()
+
+    assert isinstance(rates, list)
+    assert rates
+
+    for rate_entry in rates:
+        assert rate_entry["quote"] == "USD"
+
+        assert isinstance(rate_entry["rate"], (int, float))
+        assert not isinstance(rate_entry["rate"], bool)
+        assert rate_entry["rate"] > 0
