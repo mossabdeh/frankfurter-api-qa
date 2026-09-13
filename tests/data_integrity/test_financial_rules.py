@@ -84,3 +84,69 @@ def test_data_004_inverse_rate_consistency(client):
         rel_tol=0.0,
         abs_tol=1e-4,
     )
+
+
+
+
+
+
+CROSS_RATE_REL_TOLERANCE = 2e-4
+
+
+@pytest.mark.data_integrity
+def test_data_005_cross_rate_consistency(client):
+    """
+    DATA-005  Cross-rate consistency
+
+    Endpoints:
+        GET /rate/EUR/USD?date=2026-01-02&providers=ECB
+        GET /rate/USD/GBP?date=2026-01-02&providers=ECB
+        GET /rate/EUR/GBP?date=2026-01-02&providers=ECB
+
+    Objective:
+        Verify that related exchange rates from the same provider
+        satisfy the expected cross-rate relationship.
+
+    Expected:
+        - All requests return HTTP 200
+        - All responses use the requested date and currency pairs
+        - EUR/USD × USD/GBP is approximately equal to EUR/GBP
+        - A small tolerance is allowed for published-rate rounding
+    """
+    params = {
+        "date": "2026-01-02",
+        "providers": "ECB",
+    }
+
+    eur_usd_response = client.get_rate("EUR", "USD", params=params)
+    usd_gbp_response = client.get_rate("USD", "GBP", params=params)
+    eur_gbp_response = client.get_rate("EUR", "GBP", params=params)
+
+    assert eur_usd_response.status_code == 200
+    assert usd_gbp_response.status_code == 200
+    assert eur_gbp_response.status_code == 200
+
+    eur_usd = eur_usd_response.json()
+    usd_gbp = usd_gbp_response.json()
+    eur_gbp = eur_gbp_response.json()
+
+    assert eur_usd["base"] == "EUR"
+    assert eur_usd["quote"] == "USD"
+    assert eur_usd["date"] == "2026-01-02"
+
+    assert usd_gbp["base"] == "USD"
+    assert usd_gbp["quote"] == "GBP"
+    assert usd_gbp["date"] == "2026-01-02"
+
+    assert eur_gbp["base"] == "EUR"
+    assert eur_gbp["quote"] == "GBP"
+    assert eur_gbp["date"] == "2026-01-02"
+
+    calculated_eur_gbp = eur_usd["rate"] * usd_gbp["rate"]
+
+    assert isclose(
+        calculated_eur_gbp,
+        eur_gbp["rate"],
+        rel_tol=CROSS_RATE_REL_TOLERANCE,
+        abs_tol=0.0,
+    )
