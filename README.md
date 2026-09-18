@@ -12,6 +12,15 @@ Testing started in Bruno to understand API behavior, validation rules, edge case
 
 The automated suite currently contains **17 designed scenarios / 18 Pytest executions**.
 
+## Project Outcome
+
+Exploratory testing identified two validation gaps that were confirmed upstream by the Frankfurter maintainer:
+
+- Strict date validation : [Frankfurter #677](https://github.com/lineofflight/frankfurter/issues/677)
+- Unsupported currency `scope` validation : [Frankfurter #678](https://github.com/lineofflight/frankfurter/issues/678)
+
+See the original QA discussion: [Frankfurter #675](https://github.com/lineofflight/frankfurter/discussions/675)
+
 ## Setup
 
 Requires Python 3.10+.
