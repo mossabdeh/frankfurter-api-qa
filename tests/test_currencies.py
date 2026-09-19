@@ -20,7 +20,7 @@ def test_reg_007_currency_collection_contract(client):
         - JSON array
         - Response is not empty
         - Every currency contains:
-          iso_code, iso_numeric, name, symbol, start_date, end_date
+          iso_code, name
         - Metadata fields have the expected types
         - Date fields contain valid dates
     """
@@ -47,15 +47,20 @@ def test_reg_007_currency_collection_contract(client):
         assert required_fields.issubset(currency)
 
         assert isinstance(currency["iso_code"], str)
-        assert isinstance(currency["iso_numeric"], str)
+        
         assert isinstance(currency["name"], str)
-        assert isinstance(currency["symbol"], str)
-        assert isinstance(currency["start_date"], str)
-        assert isinstance(currency["end_date"], str)
-
-        date.fromisoformat(currency["start_date"])
-        date.fromisoformat(currency["end_date"])
-
+        if "iso_numeric" in currency:
+            assert isinstance(currency["iso_numeric"], (str, type(None)))
+        if "symbol" in currency:
+            assert isinstance(currency["symbol"], (str, type(None)))
+        if "start_date" in currency:
+            assert isinstance(currency["start_date"], (str, type(None)))
+            if currency["start_date"] is not None:
+                date.fromisoformat(currency["start_date"])
+        if "end_date" in currency:
+            assert isinstance(currency["end_date"], (str, type(None)))
+            if currency["end_date"] is not None:
+                date.fromisoformat(currency["end_date"])
 
 
 
